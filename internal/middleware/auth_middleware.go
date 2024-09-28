@@ -7,7 +7,7 @@ import (
 	"github.com/sigit14ap/user-service/helpers"
 )
 
-func AuthMiddleware(jwtSecret string) gin.HandlerFunc {
+func AuthMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		token := context.GetHeader("Authorization")
 		if token == "" {

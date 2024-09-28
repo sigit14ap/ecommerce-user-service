@@ -10,7 +10,7 @@ import (
 	"github.com/sigit14ap/user-service/internal/domain"
 	repository "github.com/sigit14ap/user-service/internal/repository/mysql"
 	"github.com/sigit14ap/user-service/internal/router"
-	"github.com/sigit14ap/user-service/internal/services"
+	"github.com/sigit14ap/user-service/internal/usecase"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -38,10 +38,10 @@ func main() {
 	}
 
 	userRepo := repository.NewUserRepository(db)
-	userService := services.NewUserService(userRepo, cfg.JWTSecret)
+	userService := usecase.NewUserUsecase(userRepo)
 	userHandler := delivery.NewUserHandler(userService)
 
-	router := router.NewRouter(userHandler, cfg.JWTSecret)
+	router := router.NewRouter(userHandler)
 
 	log.Fatal(router.Run(":" + os.Getenv("APP_PORT")))
 }

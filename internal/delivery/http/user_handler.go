@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	helpers "github.com/sigit14ap/user-service/helpers"
-	"github.com/sigit14ap/user-service/internal/services"
+	"github.com/sigit14ap/user-service/internal/usecase"
 )
 
 type UserHandler struct {
-	userService services.UserService
+	userUsecase usecase.UserUsecase
 }
 
 type LoginRequest struct {
@@ -26,8 +26,8 @@ type RegisterRequest struct {
 
 var validate *validator.Validate
 
-func NewUserHandler(userService services.UserService) *UserHandler {
-	return &UserHandler{userService: userService}
+func NewUserHandler(userUsecase usecase.UserUsecase) *UserHandler {
+	return &UserHandler{userUsecase: userUsecase}
 }
 
 func (handler *UserHandler) Register(context *gin.Context) {
@@ -45,7 +45,7 @@ func (handler *UserHandler) Register(context *gin.Context) {
 		return
 	}
 
-	err = handler.userService.Register(registerRequest.Email, registerRequest.Phone, registerRequest.Password)
+	err = handler.userUsecase.Register(registerRequest.Email, registerRequest.Phone, registerRequest.Password)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusInternalServerError, err.Error())
 		return
@@ -69,7 +69,7 @@ func (handler *UserHandler) Login(context *gin.Context) {
 		return
 	}
 
-	token, err := handler.userService.Login(loginRequest.EmailOrPhone, loginRequest.Password)
+	token, err := handler.userUsecase.Login(loginRequest.EmailOrPhone, loginRequest.Password)
 	if err != nil {
 		helpers.ErrorResponse(context, http.StatusUnauthorized, "Email/Phone number or password are incorrect")
 		return
