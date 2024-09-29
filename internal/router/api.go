@@ -9,12 +9,15 @@ import (
 func NewRouter(userHandler *delivery.UserHandler) *gin.Engine {
 	router := gin.New()
 
-	v1 := router.Group("/api/v1/users")
-	{
-		v1.POST("/register", userHandler.Register)
-		v1.POST("/login", userHandler.Login)
+	v1 := router.Group("/api/v1")
+	v1.Use(middleware.ServiceMiddleware())
 
-		user := v1.Use(middleware.AuthMiddleware())
+	users := v1.Group("/users")
+	{
+		users.POST("/register", userHandler.Register)
+		users.POST("/login", userHandler.Login)
+
+		user := users.Use(middleware.AuthMiddleware())
 		{
 			user.GET("/me", userHandler.Me)
 		}

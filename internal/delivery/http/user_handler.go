@@ -47,7 +47,7 @@ func (handler *UserHandler) Register(context *gin.Context) {
 
 	err = handler.userUsecase.Register(registerRequest.Email, registerRequest.Phone, registerRequest.Password)
 	if err != nil {
-		helpers.ErrorResponse(context, http.StatusInternalServerError, err.Error())
+		helpers.ErrorResponse(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
