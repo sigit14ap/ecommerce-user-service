@@ -10,12 +10,14 @@ import (
 )
 
 type Claims struct {
-	Email string `json:"email"`
-	Phone string `json:"phone"`
+	Type   string `json:"type"`
+	Email  string `json:"email"`
+	Phone  string `json:"phone"`
+	UserID uint64 `json:"user_id"`
 	jwt.StandardClaims
 }
 
-func GenerateJWT(email, phone string) (string, error) {
+func GenerateJWT(email string, userID uint64) (string, error) {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
 		return "", errors.New("JWT_SECRET not set in environment variables")
@@ -23,8 +25,9 @@ func GenerateJWT(email, phone string) (string, error) {
 
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
-		Email: email,
-		Phone: phone,
+		Type:   "user",
+		Email:  email,
+		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

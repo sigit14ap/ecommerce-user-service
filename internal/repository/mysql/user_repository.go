@@ -10,6 +10,7 @@ type UserRepository interface {
 	CreateUser(user *domain.User) error
 	GetUserByEmail(email string) (*domain.User, error)
 	GetUserByPhone(phone string) (*domain.User, error)
+	GetUserById(id uint64) (*domain.User, error)
 }
 
 type userRepository struct {
@@ -34,4 +35,10 @@ func (repository *userRepository) GetUserByPhone(phone string) (*domain.User, er
 	var user domain.User
 	err := repository.db.Where("phone = ?", phone).First(&user).Error
 	return &user, err
+}
+
+func (repository *userRepository) GetUserById(id uint64) (*domain.User, error) {
+	var shop domain.User
+	err := repository.db.Where("id = ?", id).First(&shop).Error
+	return &shop, err
 }

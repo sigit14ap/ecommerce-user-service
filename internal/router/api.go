@@ -14,9 +14,9 @@ func NewRouter(userHandler *delivery.UserHandler) *gin.Engine {
 		v1.POST("/register", userHandler.Register)
 		v1.POST("/login", userHandler.Login)
 
-		_ = v1.Use(middleware.AuthMiddleware())
+		user := v1.Use(middleware.AuthMiddleware())
 		{
-
+			user.GET("/me", userHandler.Me)
 		}
 	}
 

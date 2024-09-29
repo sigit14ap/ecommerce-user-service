@@ -77,3 +77,26 @@ func (handler *UserHandler) Login(context *gin.Context) {
 
 	helpers.SuccessResponse(context, gin.H{"token": token})
 }
+
+func (handler *UserHandler) Me(context *gin.Context) {
+	userID, exists := context.Get("userID")
+
+	if !exists {
+		helpers.ErrorResponse(context, http.StatusUnauthorized, "User id not found")
+		return
+	}
+
+	userIDUint, valid := userID.(uint64)
+	if !valid {
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "User ID is not valid"})
+		return
+	}
+
+	user, err := handler.userUsecase.Me(userIDUint)
+	if err != nil {
+		helpers.ErrorResponse(context, http.StatusUnauthorized, "User data not found")
+		return
+	}
+
+	helpers.SuccessResponse(context, gin.H{"user": user})
+}
