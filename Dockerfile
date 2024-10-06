@@ -15,6 +15,8 @@ COPY --from=builder /user-service .
 
 COPY .env .
 
-EXPOSE 8000
+#EXPOSE 8000
+# Cloud Run expects the app to listen on port 8080
+EXPOSE 8080
 
 CMD ["./user-service"]
